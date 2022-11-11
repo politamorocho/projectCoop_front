@@ -1,0 +1,238 @@
+<app-sidebar></app-sidebar>
+
+<div class="main-panel">
+    <div class="content" id="main">
+
+        <!-- <div class="main-panel"> -->
+
+        <p class="p1">Administar Unidades</p>
+
+        <div class="subcabecera ">
+
+            <!-- <div class="row "> -->
+
+            <button type="button" class="btn ml-4 mb-3 db botoncito" data-toggle="modal" data-target="#modalCrearUnidad"><i class="fas fa-plus"></i>
+                    Crear Unidad
+            </button>
+
+
+
+            <div class="divSelect">
+                <div class="form__group field divSelect ">
+                    <input type="input" [(ngModel)]="searchText" class="form__field" placeholder="Name" name="name" id='name' required />
+                    <label for="name" class="form__label" style="font-size: 16px;">  <i class="fas fa-search" ></i> Búsqueda</label>
+                </div>
+            </div>
+
+            <div class="table-responsive">
+
+                <table mdbTable #tableEl="mdbTable" class="tt table">
+                    <thead class="ths">
+                        <tr>
+                            <th scope="col"><i class="fas fa-hashtag"></i> Unidad </th>
+                            <th scope="col"><i class="fas fa-id-card"></i> Placa </th>
+                            <!-- <th scope="col"><i class="fas fa-shuttle-van"></i> Ejes </th> -->
+                            <th scope="col"><i class="fab fa-font-awesome-flag"></i> Estado </th>
+                            <th scope="col"><i class="fas fa-tools"></i> Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="tbs">
+
+                        <!-- <ng-container *ngFor="let el of elements; let i=index"> -->
+                        <!-- <tr mdbTableCol *ngIf="el.estado != false"> -->
+                        <tr mdbTableCol *ngFor="let el of elements; let i=index">
+                            <th *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex" scope="row">{{el.numeroDisco}}</th>
+                            <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{el.placa |uppercase}}</td>
+                            <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex && el.estado == true">Activa</td>
+                            <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex && el.estado == false">Inactiva</td>
+                            <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">
+                                <div class="button-group">
+                                    <button *ngIf="el.estado == false" hidden type="button" class="btn  btn-sm bbb" data-toggle="modal" data-target="#modalEditarUnidad" (click)="obtenerPorID(el._id)"><i class="fas fa-pencil-alt"></i> Editar</button>
+                                    <button *ngIf="el.estado == true" type="button" class="btn  btn-sm bbb" data-toggle="modal" data-target="#modalEditarUnidad" (click)="obtenerPorID(el._id)"><i class="fas fa-pencil-alt"></i> Editar</button>
+                                    <button *ngIf="el.estado == false" style="width: 12.5em;" type="button" class="btn  btn-sm botoncito" data-toggle="modal" data-target="#modalHabilitarUnidad" (click)="enviarUnidad(el)"><i class="fas fa-check"></i> Habilitar</button>
+                                    <button *ngIf="el.estado == true" type="button" class="btn  btn-sm b3" data-toggle="modal" data-target="#modalEliminarUnidad" (click)="enviarUnidad(el)"><i class="fas fa-ban "></i> Inhalibitar</button>
+                                </div>
+                            </td>
+
+                        </tr>
+
+                        <!-- </ng-container> -->
+
+                    </tbody>
+                    <td class="paginador" colspan="4">
+                        <mdb-table-pagination class="paginador" [tableEl]="tableEl" [searchDataSource]="elements"></mdb-table-pagination>
+                    </td>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- MODAL CREAR UNIDAD -->
+
+
+
+<div class="modal fade" id="modalCrearUnidad" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header mh">
+                <h5 class="modal-title w-100 text-center " id="exampleModalLabel">Crear Unidad</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          
+          </button>
+            </div>
+            <div class="modal-body">
+
+                <form class="login100-form validate-form flex-sb flex-w animated text-center" style="color: #757575;" [formGroup]="formCrearUnidad" (ngSubmit)="crearUnidad(formCrearUnidad.value)">
+
+
+                    <div class="m-2">
+                        <!-- INGRESAR NÚMERO DE UNIDAD -->
+                        <span *ngIf="f.numeroDisco.invalid && (f.numeroDisco.dirty || f.numeroDisco.touched)" class="text-danger animated fadeIn"> Debe ingresar un número de unidad</span>
+
+                        <tr></tr>
+                        <span *ngIf="f.numeroDisco.errors?.maxlength" class="text-danger animated fadeIn">Ingrese un número de máximo tres dígitos</span>
+
+                        <div class="form-floating col mb-3">
+
+
+                            <input [class.is-invalid]="formCrearUnidad.get('numeroDisco')?.touched && formCrearUnidad.get('numeroDisco')?.invalid" formControlName="numeroDisco" type="text" name='numeroDisco' class="form-control form-icon-trailing entrada1" id="floatNumeroDisco"
+                                placeholder="Número">
+
+                            <label for="floatingInput" class="form-label"><i class="fas fa-hashtag" id="iconos"></i> Unidad</label>
+
+                        </div>
+
+                        <!-- INGRESAR PLACA DE UNIDAD -->
+
+                        <span *ngIf="f.placa.invalid && (f.placa.dirty || f.placa.touched)" class="text-danger animated fadeIn"> Debe ingresar una placa con la sintaxis AAA-123/4</span>
+
+                        <div class="form-floating col">
+
+                            <input [class.is-invalid]="formCrearUnidad.get('placa')?.touched && formCrearUnidad.get('placa')?.invalid" formControlName="placa" type="text" name='placa' class="form-control form-icon-trailing entrada2" id="floatingInputPLACA" placeholder="Placa">
+
+                            <label for="floatingInput" class="form-label"><i class="fas fa-id-card"  id="iconos"></i> Placa</label>
+
+                        </div>
+                    </div>
+                    <hr>
+                    <div class=" button group row m-3 ">
+
+                        <button type="button" class="btn col btn-md mh2 " aria-label="Close" data-dismiss="modal" (click)="resetear()"><i class="fas fa-window-close"></i> Cancelar</button>
+                        <button type="submit " class="btn col btn-md mhh " [disabled]="formCrearUnidad.invalid"><i class="fas fa-save"></i> crear unidad</button>
+
+                    </div>
+
+                </form>
+                <!-- Form -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- MODAL EDITAR UNIDAD -->
+
+<div class="modal fade" id="modalEditarUnidad" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header mh">
+                <h5 class="modal-title w-100 text-center " id="exampleModalLabel">Editar Unidad</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          
+          </button>
+            </div>
+            <div class="modal-body">
+
+                <form class="text-center" style="color: #757575;" [formGroup]="formEditarUnidad" (ngSubmit)=" editarUnidad(formEditarUnidad.value, elements1._id)">
+
+
+                    <div class="m-2">
+                        <!-- INGRESAR NÚMERO DE UNIDAD -->
+                        <span *ngIf="f1.numeroDisco.invalid && (f1.numeroDisco.dirty || f1.numeroDisco.touched)" class="text-danger animated fadeIn"> Debe ingresar un número de unidad</span>
+
+                        <tr></tr>
+                        <span *ngIf="f1.numeroDisco.errors?.maxlength" class="text-danger animated fadeIn">Ingrese un número de máximo tres dígitos</span>
+
+                        <div class="form-floating col mb-3">
+
+                            <input [class.is-invalid]="formEditarUnidad.get('numeroDisco')?.touched && formEditarUnidad.get('numeroDisco')?.invalid" formControlName="numeroDisco" type="text" name='numeroDisco' class="form-control form-icon-trailing entrada1" id="floatNumeroDisco"
+                                placeholder="Número de disco">
+
+                            <label for="floatingInput" class="form-label"><i class="fas fa-hashtag"  id="iconos"></i> Unidad</label>
+
+                        </div>
+
+                        <!-- INGRESAR PLACA DE UNIDAD -->
+                        <span *ngIf="f1.placa.invalid && (f1.placa.dirty || f1.placa.touched)" class="text-danger animated fadeIn"> Debe ingresar una placa con la sintaxis AAA-123/4</span>
+                        <div class="form-floating col">
+
+                            <input [class.is-invalid]="formEditarUnidad.get('placa')?.touched && formEditarUnidad.get('placa')?.invalid" formControlName="placa" type="text" name='placa' class="form-control form-icon-trailing entrada2" id="floatingInput" placeholder="Usuario">
+
+                            <label for="floatingInput" class="form-label"><i class="fas fa-id-card"  id="iconos"></i> Placa</label>
+
+                        </div>
+                    </div>
+                    <hr>
+                    <div class=" button group row m-3 ">
+
+                        <button type="button" class="btn col btn-md mh2 " aria-label="Close" data-dismiss="modal"><i class="fas fa-window-close"></i> Cancelar</button>
+                        <button type="submit " class="btn col btn-md mhh "><i class="fas fa-save"></i> Guardar Edición</button>
+                    </div>
+
+                </form>
+                <!-- Form -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL INHABILITAR UNIDAD -->
+
+<div class="modal fade" id="modalEliminarUnidad" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header mh">
+                <h5 class="modal-title w-100 text-center " id="exampleModalLabel">Inhabilitar Unidad</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          
+          </button>
+            </div>
+            <div class="modal-body  mr-3 ml-3">
+
+                <p class="titulo-eliminar"> ¿Está seguro de inhabilitar la unidad {{elements1.numeroDisco}} con placa: {{elements1.placa | uppercase}}?</p>
+            </div>
+
+            <div class=" button group row m-4 ">
+
+                <button type="button" class="btn col btn-md mh2 " aria-label="Close" data-dismiss="modal"><i class="fas fa-window-close"></i> Cancelar</button>
+                <button type="button" class="btn col btn-md mhh " aria-label="Close" data-dismiss="modal" (click)="eliminarUnidad(elements1._id)"><i class="fas fa-ban"></i> Sí, inhabilitar</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- MODAL HABILITAR UNIDAD -->
+
+<div class="modal fade" id="modalHabilitarUnidad" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header mh">
+                <h5 class="modal-title w-100 text-center " id="exampleModalLabel">Habilitar Unidad</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          
+          </button>
+            </div>
+            <div class="modal-body  mr-3 ml-3">
+
+                <p class="titulo-eliminar"> ¿Está seguro de habilitar la unidad {{elements1.numeroDisco}} con placa: {{elements1.placa | uppercase}}?</p>
+            </div>
+
+            <div class=" button group row m-4 ">
+
+                <button type="button" class="btn col btn-md mh2 " aria-label="Close" data-dismiss="modal"><i class="fas fa-window-close"></i> Cancelar</button>
+                <button type="button" class="btn col btn-md mhh " aria-label="Close" data-dismiss="modal" (click)="habilitarUnidad(elements1._id)"><i class="fas fa-check"></i> Sí, habilitar</button>
+            </div>
+        </div>
+    </div>
+</div>

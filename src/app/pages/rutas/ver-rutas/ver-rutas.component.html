@@ -1,0 +1,338 @@
+<app-sidebar></app-sidebar>
+
+<div class="main-panel">
+    <div class="content" id="main">
+
+        <!-- <div class="main-panel"> -->
+
+        <p class="p1">Administar Rutas</p>
+
+        <div class="subcabecera ">
+
+            <button class="btn ml-4 mb-3 db botoncito" data-toggle="modal" data-target="#modalCrearRuta"><i class="fas fa-plus"></i>
+                Crear Ruta
+            </button>
+
+
+            <div class="divSelect">
+                <div class="form__group field divSelect ">
+                    <input type="input" [(ngModel)]="searchText" class="form__field" placeholder="Name" name="name" id='name' required />
+                    <label for="name" class="form__label" style="font-size: 16px;">  <i class="fas fa-search" ></i> Búsqueda</label>
+                </div>
+            </div>
+
+
+            <div class="table-responsive">
+
+
+
+                <table mdbTable #tableEl="mdbTable" class="tt table">
+                    <thead class="ths">
+                        <tr>
+                            <th scope="col"><i class="fas fa-map-marker"></i> Lugar de salida </th>
+                            <th scope="col"><i class="fas fa-map-marker-alt"></i> Lugar de llegada </th>
+                            <th scope="col"><i class="fas fa-clock"></i> Duración aproximada </th>
+                            <th scope="col"><i class="fab fa-font-awesome-flag"></i> Estado </th>
+                            <!-- <i class="fas fa-paste"></i> -->
+                            <th scope="col"><i class="fas fa-tools"></i> Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="tbs">
+                        <tr mdbTableCol *ngFor="let el of elements; let i=index">
+                            <th *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex" scope="row">{{el.origen | titlecase }}</th>
+                            <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{el.destino | titlecase}}</td>
+                            <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{el.duracionAprox | titlecase}} Hora(s)</td>
+                            <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex  && el.estado == true ">Activa</td>
+                            <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex  && el.estado == false ">Inactiva</td>
+                            <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">
+                                <div class="button-group">
+
+                                    <button *ngIf="el.estado == false" hidden type="button" class="btn  btn-sm bbb" data-toggle="modal" data-target="#modalEditarRuta" (click)="obtenerPorID(el._id)"><i class="fas fa-pencil-alt"></i> Editar</button>
+                                    <button *ngIf="el.estado == true" type="button" class="btn  btn-sm bbb" data-toggle="modal" data-target="#modalEditarRuta" (click)="obtenerPorID(el._id)"><i class="fas fa-pencil-alt"></i> Editar</button>
+                                    <button *ngIf="el.estado == false" type="button" style="width: 12.5em;" class="btn  btn-sm botoncito" data-toggle="modal" data-target="#modalHabilitarRuta" (click)="enviarRuta(el)"><i class="fas fa-check"></i> Habilitar</button>
+                                    <button *ngIf="el.estado == true" type="button" class="btn  btn-sm b3" data-toggle="modal" data-target="#modalEliminarRuta" (click)="enviarRuta(el)"><i class="fas fa-ban"></i> Inhabilitar</button>
+
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <td class="paginador" colspan="6">
+                        <mdb-table-pagination class="paginador" [tableEl]="tableEl" [searchDataSource]="elements"></mdb-table-pagination>
+                    </td>
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- MODAL CREAR RUTA -->
+
+<div class="modal fade" id="modalCrearRuta" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header mh">
+                <h5 class="modal-title w-100 text-center " id="exampleModalLabel">Crear Ruta</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          
+          </button>
+            </div>
+            <div class="modal-body">
+
+                <form class="text-center" style="color: #757575;" [formGroup]="formCrearRuta" (ngSubmit)="crearRuta(formCrearRuta.value)">
+
+
+                    <div class="contenedorr">
+                        <div class="row">
+                            <div class="col col-lg-12 col-md-12 col-sm-12">
+                                <h5>
+                                    <mdb-badge class="subTitulo">Seleccionar origen <i class="fas fa-map-marker"></i></mdb-badge>
+                                </h5>
+                                <div class="divSelect">
+                                    <select formControlName="origen" class="form-control ssmm" name="origen">
+                                
+                                    <option value="">Seleccionar origen..</option>
+                    
+                                    <option value="Ibarra"> Ibarra  </option>
+                    
+                                    <option value="Otavalo">Otavalo</option>
+                  
+                                    <option value="Cayambe">Cayambe</option>
+
+                                    <option value="Cotacachi">Cotacachi</option>
+
+                                    <option value="Antonio Ante">Antonio Ante</option>
+
+                                    <option value="San Miguel">San Miguel</option>
+
+                                    <option value="Pimampiro">Pimampiro</option>
+                    
+                                  </select>
+
+                                </div>
+
+                            </div>
+                            <div class="col col-lg-12 col-md-12 col-sm-12">
+                                <h5>
+                                    <mdb-badge class="subTitulo">Seleccionar destino <i class="fas fa-map-marker-alt"></i></mdb-badge>
+                                </h5>
+                                <div class="divSelect">
+                                    <select formControlName="destino" class="form-control ssmm" name="destino">
+                                
+                                        <option value="">Seleccionar destino..</option>
+                    
+                                        <option value="Ibarra"> Ibarra  </option>
+                        
+                                        <option value="Otavalo">Otavalo</option>
+                      
+                                        <option value="Cayambe">Cayambe</option>
+    
+                                        <option value="Cotacachi">Cotacachi</option>
+    
+                                        <option value="Antonio Ante">Antonio Ante</option>
+    
+                                        <option value="San Miguel">San Miguel</option>
+    
+                                        <option value="Pimampiro">Pimampiro</option>
+                        
+                    
+                                  </select>
+
+                                </div>
+
+                            </div>
+                            <span *ngIf="f.duracionAprox.invalid && (f.duracionAprox.dirty || f.duracionAprox.touched)" class="text-danger animated fadeIn">Tiempo estimado a partir de 30 minutos</span>
+
+                            <div class="divSelect mt-1">
+
+                                <!-- <div class="col col-lg-7 col-md-7 col-sm-4 col-xs-4"> -->
+                                <div class="col divSelect">
+
+                                    <div class="form-floating ">
+
+                                        <input [class.is-invalid]="formCrearRuta.get('duracionAprox')?.touched && formCrearRuta.get('duracionAprox')?.invalid" formControlName="duracionAprox" type="time" min="00:30" max="23:59" name='duracionAprox' class="form-control" id="floatingInputHora"
+                                            placeholder="Hora">
+
+                                        <label for="floatingInputHora" class="form-label"><i class="fas fa-clock"></i> Tiempo estimado</label>
+
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class=" button group row m-3 ">
+
+                        <button type="button" class="btn col btn-md mh2 " aria-label="Close" data-dismiss="modal" (click)="resetear()"><i class="fas fa-window-close"></i> Cancelar</button>
+                        <button type="submit " class="btn col btn-md mhh " [disabled]="formCrearRuta.invalid"><i class="fas fa-save"></i> crear Ruta</button>
+                    </div>
+
+                </form>
+                <!-- Form -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL EDITAR RUTA -->
+
+<div class="modal fade" id="modalEditarRuta" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header mh">
+                <h5 class="modal-title w-100 text-center " id="exampleModalLabel">Editar Ruta</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          
+          </button>
+            </div>
+            <div class="modal-body">
+
+                <!-- Form -->
+                <form class="text-center" style="color: #757575;" [formGroup]="formEditarRuta" (ngSubmit)="editarRuta(formEditarRuta.value, elements1._id)">
+
+
+
+                    <div class="contenedorr">
+
+                        <!-- </div> -->
+
+                        <div class="row">
+                            <div class="col col-lg-12 col-md-12 col-sm-12">
+                                <h5>
+                                    <mdb-badge class="subTitulo">Seleccionar origen <i class="fas fa-map-marker"></i></mdb-badge>
+                                </h5>
+                                <div class="divSelect">
+                                    <select formControlName="origen" class="form-control ssmm" name="origen">
+                
+                                        <option value="{{elements1.origen|titlecase}}">{{elements1.origen | titlecase}}</option>
+                        
+                                        <option value="Ibarra"> Ibarra  </option>
+                        
+                                        <option value="Otavalo">Otavalo</option>
+                    
+                                        <option value="Cayambe">Cayambe</option>
+
+                                        <option value="Cotacachi">Cotacachi</option>
+
+                                        <option value="Antonio Ante">Antonio Ante</option>
+
+                                        <option value="San Miguel">San Miguel</option>
+
+                                        <option value="Pimampiro">Pimampiro</option>
+    
+                                    </select>
+
+                                </div>
+
+                            </div>
+                            <div class="col col-lg-12 col-md-12 col-sm-12">
+                                <h5>
+                                    <mdb-badge class="subTitulo">Seleccionar destino <i class="fas fa-map-marker-alt"></i></mdb-badge>
+                                </h5>
+                                <div class="divSelect">
+                                    <select formControlName="destino" class="form-control ssmm" name="destino">
+                
+                                        <option value="{{elements1.destino |titlecase}}">{{elements1.destino |titlecase}}</option>
+                                       
+                                        <option value="Ibarra"> Ibarra  </option>
+                        
+                                        <option value="Otavalo">Otavalo</option>
+                    
+                                        <option value="Cayambe">Cayambe</option>
+
+                                        <option value="Cotacachi">Cotacachi</option>
+
+                                        <option value="Antonio Ante">Antonio Ante</option>
+
+                                        <option value="San Miguel">San Miguel</option>
+
+                                        <option value="Pimampiro">Pimampiro</option>
+                        
+                                    </select>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <span *ngIf="f1.duracionAprox.invalid && (f1.duracionAprox.dirty || f1.duracionAprox.touched)" class="text-danger animated fadeIn">Tiempo estimado a partir de 30 minutos</span>
+
+
+                        <div class="divSelect mt-1">
+
+                            <!-- <div class="col col-lg-7 col-md-7 col-sm-4 col-xs-4"> -->
+                            <div class="col divSelect">
+
+                                <div class="form-floating ">
+
+                                    <input [class.is-invalid]="formEditarRuta.get('duracionAprox')?.touched && formEditarRuta.get('duracionAprox')?.invalid" formControlName="duracionAprox" min="00:30" max="23:59" type="time" name='duracionAprox' class="form-control" id="floatingInputHora"
+                                        placeholder="Hora">
+
+                                    <label for="floatingInputHora" class="form-label"><i class="fas fa-clock"></i> Tiempo estimado</label>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <hr>
+                    <div class=" button group row m-3 ">
+
+                        <button type="button" class="btn col btn-md mh2 " aria-label="Close" data-dismiss="modal"><i class="fas fa-window-close"></i> Cancelar</button>
+                        <button type="submit " class="btn col btn-md mhh "><i class="fas fa-save"></i> Guardar Edición</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL ELIMINAR RUTA -->
+
+<div class="modal fade" id="modalEliminarRuta" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header mh">
+                <h5 class="modal-title w-100 text-center " id="exampleModalLabel">Inhabilitar Ruta</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          
+          </button>
+            </div>
+            <div class="modal-body  mr-3 ml-3">
+
+                <p class="titulo-eliminar"> ¿Está seguro de inhabilitar la ruta {{elements1.origen |uppercase}} con destino a {{elements1.destino | uppercase}}?</p>
+
+            </div>
+
+            <div class=" button group row m-4 ">
+
+                <button type="button" class="btn col btn-md mh2 " aria-label="Close" data-dismiss="modal"><i class="fas fa-window-close"></i> Cancelar</button>
+                <button type="button" class="btn col btn-md mhh " aria-label="Close" data-dismiss="modal" (click)="eliminarRuta(elements1._id)"><i class="fas fa-ban"></i> Sí, inhabilitar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL HABILITAR RUTA-->
+
+<div class="modal fade" id="modalHabilitarRuta" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header mh">
+                <h5 class="modal-title w-100 text-center " id="exampleModalLabel">Habilitar Ruta</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          
+          </button>
+            </div>
+            <div class="modal-body  mr-3 ml-3">
+
+                <p class="titulo-eliminar"> ¿Está seguro de inhabilitar la ruta {{elements1.origen |uppercase}} con destino a {{elements1.destino | uppercase}}?</p>
+            </div>
+
+            <div class=" button group row m-4 ">
+
+                <button type="button" class="btn col btn-md mh2 " aria-label="Close" data-dismiss="modal"><i class="fas fa-window-close"></i> Cancelar</button>
+                <button type="button" class="btn col btn-md mhh " aria-label="Close" data-dismiss="modal" (click)="habilitarRuta(elements1._id)"><i class="fas fa-check"></i> Sí, habilitar</button>
+            </div>
+        </div>
+    </div>
+</div>

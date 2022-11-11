@@ -1,0 +1,362 @@
+<app-sidebar>
+
+</app-sidebar>
+
+
+<div class="main-panel">
+    <div class="content" id="main">
+
+        <!-- <div class="main-panel"> -->
+
+        <p class="p1">Administar Suspensiones</p>
+
+        <div class="subcabecera ">
+
+
+            <button type="button" class="btn ml-4 mb-3 db botoncito" data-toggle="modal" data-target="#modalCrearSuspension" (click)="enviarUsuario()"><i class="fas fa-plus"></i>
+        Crear Suspensión
+      </button>
+
+
+
+            <div class="divSelect">
+                <div class="form__group field divSelect ">
+                    <input type="input" [(ngModel)]="searchText" class="form__field" placeholder="Name" name="name" id='name' required />
+                    <label for="name" class="form__label" style="font-size: 16px;">  <i class="fas fa-search" ></i> Búsqueda</label>
+                </div>
+            </div>
+
+
+            <div class="table-responsive">
+
+
+
+                <table mdbTable #tableEl="mdbTable" class="tt ">
+                    <thead class="ths">
+                        <tr>
+                            <th scope="col"><i class="far fa-calendar-alt"></i> Fecha Inicio </th>
+
+                            <th scope="col"><i class="fas fa-calendar-alt"></i> Fecha Fin</th>
+
+                            <th scope="col"><i class="fas fa-columns"></i> Descripción</th>
+
+                            <th scope="col"><i class="fas fa-users"></i> Usuario</th>
+
+                            <th scope="col"><i class="fas fa-users"></i> Rol</th>
+
+                            <th scope="col"><i class="fas fa-tools"></i> Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="tbs">
+                        <tr mdbTableCol *ngFor="let el of elements; let i=index">
+                            <th *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex" scope="row">{{el.inicio |date: 'EEEE, dd/MM/yyyy':'UTC'| titlecase}}</th>
+                            <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{el.final | date: 'EEEE, dd/MM/yyyy':'UTC'|titlecase}}</td>
+
+                            <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{el.descripcion}}</td>
+                            <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{el.usuario.nombre | titlecase}} {{el.usuario.apellido | titlecase}}</td>
+                            <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{el.usuario.rol.nombre | titlecase}}</td>
+                            <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">
+                                <div class="button-group">
+                                    <button type="button" class="btn  btn-sm bbb" data-toggle="modal" data-target="#modalEditarSuspension" (click)="obtenerPorID(el._id);enviarUsuario()"><i class="fas fa-pencil-alt"></i> Editar</button>
+                                    <!-- <button type="button" class="btn  btn-sm b3" data-toggle="modal" data-target="#modalEliminarSuspension" (click)="enviarSuspension(el)"><i class="fas fa-trash"></i> Eliminar</button> -->
+
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                    <td class="paginador" colspan="10">
+                        <mdb-table-pagination class="paginador" [tableEl]="tableEl" [searchDataSource]="elements"></mdb-table-pagination>
+                    </td>
+
+                </table>
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+
+<!-- Modal  CREAR SUSPENSION-->
+<div class="modal fade" id="modalCrearSuspension" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header mh">
+                <h5 class="modal-title w-100 text-center " id="exampleModalLabel">Crear Suspensión</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          
+          </button>
+            </div>
+            <div class="modal-body ">
+
+                <form class="text-center" style="color: #757575;" [formGroup]="formCrearSuspension" (ngSubmit)="crearSuspension(formCrearSuspension.value)">
+
+                    <div class="mt-3">
+                        <h5>
+                            <mdb-badge class="subTitulo">Seleccionar Usuario <i class="fas fa-users"></i></mdb-badge>
+                        </h5>
+                        <div class="divSelect">
+
+                            <select formControlName="usuario" class="form-control ssmm" name="nuevoRol">
+
+                    <option  value="">Seleccionar..</option>
+                    <option  *ngFor="let usuarios of usuarios"  value="{{usuarios._id  |titlecase}}">{{usuarios.nombre |titlecase}} {{usuarios.apellido|titlecase}}</option>
+                    
+                </select>
+                        </div>
+
+                    </div>
+
+                    <div class="row m-3">
+
+
+                        <div class="col col-lg-6 col-md-6 col-sm-6 mb-3">
+                            <h5>
+                                <mdb-badge class="subTitulo  text-center">Fecha de Inicio <i class="far fa-calendar-alt"></i></mdb-badge>
+                            </h5>
+                            <input formControlName="inicio" class="form-control  datetimepicker-input" name="fecha" placeholder=" " type="date" />
+
+                        </div>
+                        <div class="col col-lg-6 col-md-6 col-sm-6 mb-3">
+                            <h5>
+                                <mdb-badge class="subTitulo  text-center">Fecha de Inicio <i class="far fa-calendar-alt"></i></mdb-badge>
+                            </h5>
+                            <input formControlName="final" class="form-control  datetimepicker-input " name="fecha2" placeholder=" " type="date" />
+
+                        </div>
+
+                        <!-- <input matInput [matDatepicker]="picker">
+                        <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+                        <mat-datepicker #picker></mat-datepicker> -->
+
+
+                    </div>
+
+                    <!-- <div class="container">
+                        <div class="row m-2">
+
+                            <div class="col-sm-12">
+
+                                <div class="form-group mb-3">
+                                    <h5>
+                                        <mdb-badge class="subTitulo  text-center">Fecha de Inicio <i class="far fa-calendar-alt"></i></mdb-badge>
+                                    </h5>
+                                    <div class="input-group date mb-3" id="datetimepicker1" data-target-input="nearest">
+                                        <input formControlName="inicio" type="text" class="form-control datetimepicker-input " data-target="#datetimepicker1" />
+                                        <span class="input-group-addon" data-target="#datetimepicker1" data-toggle="datetimepicker">
+                                    <span class="fa fa-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="container">
+                        <div class="row m-2">
+                            <div class="col-sm-12">
+
+                                <div class="form-group mb-4">
+                                    <h5>
+                                        <mdb-badge class="subTitulo  text-center">Fecha de finalización <i class="fas fa-calendar-alt"></i></mdb-badge>
+                                    </h5>
+                                    <div class="input-group date mb-3" id="datetimepicker2" data-target-input="nearest">
+                                        <input formControlName="final" type="text" class="form-control datetimepicker-input " data-target="#datetimepicker2" />
+                                        <span class="input-group-addon" data-target="#datetimepicker2" data-toggle="datetimepicker">
+                                         <span class="fa fa-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+
+                    <!-- INGRESAR DESCRIPCION DE LA SUSPENSION -->
+
+                    <div class="row m-3">
+                        <div class="col-sm-12">
+                            <div class="form-floating ">
+
+                                <textarea formControlName="descripcion" type="text" class="form-control" id="tA" name="textarea" rows="10" cols="40"></textarea>
+
+                                <!-- <input formControlName="descripcion" type="text" name='dni' class="form-control form-icon-trailing entrada2" id="floatingInput4" placeholder="Usuario"> -->
+
+                                <label for="floatingInput" class="form-label"><i class="fas fa-columns" ></i> Descripcion</label>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+
+                    <div class="modal-footer">
+
+                        <button type="button" class="btn col btn-md mh2 " aria-label="Close" data-dismiss="modal" (click)="resetearForm()"><i class="fas fa-window-close"></i> Cancelar</button>
+                        <button type="submit" class="btn col btn-md mhh "><i class="fas fa-save"></i> crear </button>
+                    </div>
+                </form>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+
+<!-- MODAL EDITAR SUSPENSION -->
+
+<div class="modal fade" id="modalEditarSuspension" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header mh">
+                <h5 class="modal-title w-100 text-center " id="exampleModalLabel">Editar Suspension</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          
+          </button>
+            </div>
+            <div class="modal-body">
+
+                <form class="text-center" style="color: #757575;" [formGroup]="formEditarSuspension" (ngSubmit)="editarSuspension(formEditarSuspension.value, elements1[0][0])">
+
+                    <!-- ID DE SUSPENSION -->
+                    <div class=" col-lg-6 col-md-6 col-sm-6 col-xs-12 mb-3" hidden>
+
+                        <div class="form-floating ">
+
+                            <input formControlName="_id" type="text" name='id' class="form-control form-icon-trailing entrada1" id="floatingInputID" placeholder="Nombre">
+
+                            <label for="floatingInput" class="form-label"><i class="fas fa-signature"></i> Nombre</label>
+
+                        </div>
+
+                    </div>
+
+
+                    <!-- <div class="container">
+                        <div class="row m-2">
+                            <div class="col-sm-12">
+
+                                <div class="form-group mb-3">
+                                    <h5>
+                                        <mdb-badge class="subTitulo  text-center">Fecha de Inicio <i class="far fa-calendar-alt"></i></mdb-badge>
+                                    </h5>
+                                    <div class="input-group date mb-3" id="datetimepicker1" data-target-input="nearest">
+                                        <input formControlName="inicio" type="text" class="form-control datetimepicker-input " data-target="#datetimepicker1" value="{{el.inicio|date}}" />
+                                        <span class="input-group-addon" data-target="#datetimepicker1" data-toggle="datetimepicker">
+                                        <span class="fa fa-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="container">
+                        <div class="row m-2">
+                            <div class="col-sm-12">
+
+                                <div class="form-group mb-4">
+                                    <h5>
+                                        <mdb-badge class="subTitulo  text-center">Fecha de finalización <i class="fas fa-calendar-alt"></i></mdb-badge>
+                                    </h5>
+                                    <div class="input-group date mb-3" id="datetimepicker2" data-target-input="nearest">
+                                        <input formControlName="final" type="text" class="form-control datetimepicker-input " data-target="#datetimepicker2" value="{{el.inicio |date}}" />
+                                        <span class="input-group-addon" data-target="#datetimepicker2" data-toggle="datetimepicker">
+                                             <span class="fa fa-calendar"></span>
+                                        </span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div> -->
+
+                    <!-- INGRESO DE FECHAS -->
+                    <div class="row m-3">
+
+                        <div class="col col-lg-6 col-md-6 col-sm-6 mb-3">
+                            <h5>
+                                <mdb-badge class="subTitulo2  text-center">Fecha de Inicio <i class="far fa-calendar-alt"></i></mdb-badge>
+                            </h5>
+                            <input formControlName="inicio" class="form-control" id="fecha" name="fecha" placeholder=" " type="date" />
+                        </div>
+
+
+                        <div class="col col-lg-6 col-md-6 col-sm-6 mb-3">
+                            <h5>
+                                <mdb-badge class="subTitulo2  text-center">Fecha fin <i class="fas fa-calendar-alt"></i></mdb-badge>
+                            </h5>
+                            <input formControlName="final" class="form-control" id="fecha1" name="fecha1" placeholder=" " type="date" />
+                        </div>
+                    </div>
+
+
+                    <!-- INGRESAR DESCRIPCION DE LA SUSPENSION -->
+                    <div class="row m-2">
+                        <div class="col-sm-12">
+                            <div class="form-floating col">
+
+                                <textarea formControlName="descripcion" type="text" class="form-control" id="tA" name="textarea" rows="10" cols="45"></textarea>
+
+                                <!-- <input formControlName="descripcion" type="text" name='dni' class="form-control form-icon-trailing entrada2" id="floatingInput4" placeholder="Usuario"> -->
+
+                                <label for="floatingInput" class="form-label"><i class="fas fa-columns" id="iconos"></i> Descripcion</label>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div hidden class="mt-3">
+                        <!-- <h5>
+                            <mdb-badge class="subTitulo">Seleccionar Usuario <i class="fas fa-users"></i></mdb-badge>
+                        </h5>
+                        <div class="divSelect">
+
+
+
+                            <select formControlName="usuario" class="form-control ssmm" name="nuevoRol">
+    
+                                <option selected="selected"  *ngFor="let el of elements1" value="{{el[1]._id |titlecase}}">{{el[1].nombre |titlecase}} {{ el[1].apellido |titlecase}}</option>
+                        <option  *ngFor="let usuarios of usuarios"  value="{{usuarios._id  |titlecase}}">{{usuarios.nombre |titlecase}} {{usuarios.apellido|titlecase}}</option>
+                        
+                    </select>
+
+                        </div> -->
+                        <input *ngFor="let el of elements1" value="{{el[1]._id}}" formControlName="usuario" type="text" name='usuario' class="form-control form-icon-trailing entrada2" id="floatingInput4" placeholder="Usuario">
+
+
+                    </div>
+                    <div class=" button group row m-2 ">
+
+                        <button type="button" class="btn col btn-md mh2 " aria-label="Close" data-dismiss="modal"><i class="fas fa-window-close"></i> Cancelar</button>
+                        <button type="submit " class="btn col btn-md mhh "><i class="fas fa-save"></i> Guardar Edición</button>
+
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL ELIMINAR SUSPENSION -->
+
+<div class="modal fade" id="modalEliminarSuspension" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header mh">
+                <h5 class="modal-title w-100 text-center " id="exampleModalLabel">Eliminar Suspensión</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          
+          </button>
+            </div>
+            <div class="modal-body  mr-3 ml-3">
+                <p class="titulo-eliminar"> ¿Está seguro de eliminar la suspensión de {{elements1.nombre | uppercase}} {{elements1.apellido | uppercase}} ?</p>
+            </div>
+
+            <div class=" button group row m-4 ">
+
+                <button type="button" class="btn col btn-md mh2 " aria-label="Close" data-dismiss="modal"><i class="fas fa-window-close"></i> Cancelar</button>
+                <button type="button" class="btn col btn-md mhh " aria-label="Close" data-dismiss="modal" (click)="eliminarSuspension(elements1._id)"><i class="fas fa-trash"></i> Sí, eliminar</button>
+            </div>
+        </div>
+    </div>
+</div>

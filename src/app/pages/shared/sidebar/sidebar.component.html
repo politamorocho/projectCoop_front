@@ -1,0 +1,127 @@
+<!-- <!DOCTYPE html> -->
+<html lang="en" id="html">
+
+
+<!-- <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Profesional</title>
+</head> -->
+
+<!-- <body> -->
+<!--Contenedor de todo nuestro dashboard-->
+<!-- <div class="wrapper"> -->
+<!--Sidebar-->
+<div class="sidebar" id="sidebar">
+
+    <!--Contenedor de nuestro sidebar-->
+    <div class="sidebar-wrapper">
+        <div class="logo-rc">
+            <img src="assets/img/flor.png" />
+            <span>Flor del Valle</span>
+        </div>
+        <div class="nav">
+            <ul>
+                <!-- <li>
+                    <a href="">
+                        <i class="fas fa-tachometer-alt"></i>
+                        <span>dashboard</span>
+                    </a>
+                </li> -->
+                <li>
+                    <a [routerLink]="[ '/reportes/pag_reportes' ]" routerLinkActive="active">
+
+                        <i class="fas fa-clipboard"></i>
+                        <span>reportes</span>
+                    </a>
+                </li>
+                <li>
+                    <a [routerLink]="[ '/turnos/ver_turnos' ]" routerLinkActive="active">
+                        <i class="fas fa-road"></i>
+                        <span>Turno</span>
+                    </a>
+                </li>
+                <li>
+                    <a [routerLink]="[ '/suspensiones/ver_suspension' ]" routerLinkActive="active">
+                        <i class="fas fa-calendar-times"></i>
+                        <span>suspensiones</span>
+                    </a>
+                </li>
+
+                <li>
+                    <a [routerLink]="[ '/usuarios/ver_usuarios' ]" routerLinkActive="active">
+                        <i class="fas fa-user-tie"></i>
+                        <span>usuarios</span>
+                    </a>
+                </li>
+                <li>
+                    <a [routerLink]="[ '/roles/ver_roles' ]" routerLinkActive="active">
+                        <i class="fas fa-users"></i>
+                        <span>Roles</span>
+                    </a>
+                </li>
+                <li>
+                    <a [routerLink]="[ '/rutas/ver_rutas' ]" routerLinkActive="active">
+                        <i class="fas fa-map-marked-alt"></i>
+                        <span>rutas</span>
+                    </a>
+                </li>
+                <li>
+                    <a [routerLink]="['/unidades/ver_unidades']" routerLinkActive="router-link-active">
+                        <i class="fas fa-bus-alt"></i>
+                        <span>unidades</span>
+                    </a>
+                </li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<!--Contiene todo el cuerpo de nuestro panel administritivo-->
+<!-- <div class="main-panel"> -->
+<!--Cabecera o Header de nuestro dashboard -->
+<nav class="navbar">
+    <!--Botones que animaran nuestro sidebar-->
+    <div class="navbar-bar" id="content-buttons">
+        <!--El boton por defecto de nuestro header-->
+        <button id="boton-sidebar"><i class="fas fa-bars"></i></button>
+        <!--El boton que aparecera desde el modo tablet-->
+        <button id="boton-sidebar_left"><i class="fas fa-bars"></i></button>
+        <!--El boton que aparecera si es que nuestro dashboard hace scroll-->
+        <div class="navbar-bar_fixed" id="content-button_fixed">
+            <button id="boton-sidebar_fixed"><i class="fas fa-bars"></i></button>
+        </div>
+        <!-- <p class="dashbb" id="dashbb">Dashboard</p> -->
+    </div>
+
+
+    <div class="btn-group dropleft mb-2">
+        <ng-container *ngFor="let el of elements">
+
+            <button *ngIf="el.rol.nombre  == 'secretaria'" type="button" class="btn  dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+          
+            <img src="assets/img/rolS.png" alt="" class="photo" >
+            
+            </button>
+
+            <!-- <button *ngIf="el.rol.nombre  == 'administrador' && el.rol.nombre !='secretaria' " type="button" class="btn  dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color:white;">
+          
+                <img src="assets/img/rolA.png" alt="" class="photo" >
+                
+            </button> -->
+            <!-- <small *ngIf="el.rol.nombre  == 'secretaria'"> {{el.nombre|titlecase}} - {{el.rol.nombre |titlecase}}</small> -->
+        </ng-container>
+        <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+
+            <a class="dropdown-item " [routerLink]="['/login/login']" routerLinkActive="router-link-active" (click)="logout()">Salir</a>
+
+        </div>
+    </div>
+
+
+</nav>
+
+
+<!-- </div> -->
+
+</html>

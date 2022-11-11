@@ -1,0 +1,38 @@
+<body class="bbody">
+    <div class="container mt-5 animated fadeInRight ">
+
+        <div class="row cb2 ">
+            <div class="col-sm-9 col-md-7 col-lg-5 mx-auto">
+                <div class="card border-0 shadow rounded-3 my-5 cb4 ">
+                    <div class="card-block p-4 p-sm-5 cb ">
+                        <img src="assets/img/logoflorvalle.png" class="image">
+
+                        <!-- <h5 class="card-title text-center mb-5 fw-light fs-5">Sign In</h5> -->
+                        <form #f="ngForm" (ngSubmit)="recuperar(f)" class="login100-form validate-form flex-sb flex-w animated">
+
+                            <span *ngIf="f.submitted && f.controls['correo'].errors" class="text-danger animated fadeIn">Debe ingresar un correo</span>
+
+                            <div class="form-floating mb-3">
+                                <input type="email" name="correo" required [(ngModel)]="recu.correo" class="form-control" id="floatingInput" placeholder="Correo">
+                                <label for="floatingInput">Correo</label>
+                            </div>
+
+
+
+                            <div class="text-center mt-4">
+                                <button type="submit" class="btn lg">Recuperar <i class="fas fa-paper-plane"></i></button>
+                            </div>
+
+                            <div class="textoA">
+                                <label>¿ Recordó su contraseña ? <a [routerLink]="['/login/login']" routerLinkActive="router-link-active" > Regresar</a> </label>
+                                <label>¿Ya tiene un código?<a [routerLink]="['/login/nuevo_password']" routerLinkActive="router-link-active" > Ingrese acá</a> </label>
+                            </div>
+
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>

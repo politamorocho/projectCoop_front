@@ -1,0 +1,408 @@
+<app-sidebar>
+
+</app-sidebar>
+
+
+<div class="main-panel">
+    <div class="content" id="main">
+
+        <!-- <div class="main-panel"> -->
+
+        <p class="p1">Administar Turno</p>
+
+        <div class="subcabecera ">
+
+
+            <button type="button" class="btn ml-4 mb-3 db botoncito" data-toggle="modal" data-target="#modalCrearTurno" (click)="enviarUsuario(); enviarUnidad(); enviarRuta()"><i class="fas fa-plus"></i>
+             Crear Turno
+            </button>
+
+
+
+            <div class="divSelect">
+                <div class="form__group field divSelect ">
+                    <input type="input" [(ngModel)]="searchText" class="form__field" placeholder="Name" name="name" id='name' required />
+                    <label for="name" class="form__label" style="font-size: 16px;">  <i class="fas fa-search" ></i> Búsqueda</label>
+                </div>
+            </div>
+
+
+            <div class="table-responsive">
+
+
+
+                <table mdbTable #tableEl="mdbTable" class="tt " id="tablaGeneral">
+                    <thead class="ths">
+                        <tr>
+                            <th scope="col"><i class="fas fa-map-marked-alt"></i> Ruta </th>
+
+                            <th scope="col"><i class="fas fa-bus-alt"></i> Unidad</th>
+
+                            <th scope="col"><i class="fas fa-user-tie"></i> Empleado 1</th>
+
+                            <th scope="col"><i class="fas fa-user-friends"></i> Tipo </th>
+
+                            <th scope="col"><i class="fas fa-user-tie"></i> Empleado 2</th>
+
+                            <th scope="col"><i class="fas fa-user-friends"></i> Tipo </th>
+
+
+                            <th scope="col"><i class="fas fa-tools"></i> Acciones</th>
+                        </tr>
+                    </thead>
+                    <tbody class="tbs">
+                        <tr mdbTableCol *ngFor="let el of elements; let i=index">
+                            <th *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex" scope="row">{{el.ruta.origen |titlecase}} - {{el.ruta.destino |titlecase}}</th>
+                            <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{el.bus.numeroDisco}} {{el.bus.placa | uppercase}} </td>
+
+                            <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{el.empleado1.nombre |titlecase}} {{el.empleado1.apellido |titlecase}}</td>
+                            <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{el.tipoEmpleado1 |titlecase }}</td>
+                            <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex && el.empleado2 == null"></td>
+                            <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex && el.empleado2 != null">{{el.empleado2.nombre |titlecase}} {{el.empleado2.apellido |titlecase}}</td>
+                            <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{el.tipoEmpleado2 |titlecase }}</td>
+                            <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">
+
+                                <!-- <ng-container *ngFor="let el of elements"> -->
+                                <!-- <div class="button-group"> -->
+                                <!-- <button *ngIf="el.empleado1._id != null && el.empleado2._id != null" hidden type="button" class="btn  btn-sm b3" data-toggle="modal" data-target="#modalAgregarEmpleado" (click)="enviarUsuario(); obtenerPorID(el._id)" readonly="readonly"><i class="fas fa-user-plus"></i> Empleado</button> -->
+                                <button *ngIf="el.empleado2  == null" type="button" class="btn  btn-sm bbb1" data-toggle="modal" data-target="#modalAgregarEmpleado" (click)="enviarUsuario(); obtenerPorID(el._id)" readonly="readonly"><i class="fas fa-user-plus"></i> Empleado</button>
+
+                                <!-- <button type="button" class="btn  btn-sm bbb" data-toggle="modal" data-target="#modalEditarTurno" (click)="obtenerPorID(el._id);enviarUsuario(); enviarRuta(); enviarUnidad()"><i class="fas fa-pencil-alt"></i> Editar</button> -->
+
+                                <!-- <button type="button" class="btn  btn-sm b3" data-toggle="modal" data-target="#modalEliminarTurno" (click)="enviarTurno(el)"><i class="fas fa-trash"></i> Eliminar</button> -->
+
+                                <!-- <button type="button" class="btn  btn-sm b3" data-toggle="modal" data-target="#modalEliminarSuspension" (click)="obtenerPorID(el._id)"><i class="fas fa-trash"></i> Eliminar</button> -->
+                                <!-- </div> -->
+
+                                <!-- </ng-container> -->
+
+
+                            </td>
+                        </tr>
+                    </tbody>
+                    <td class="paginador" colspan="10">
+                        <mdb-table-pagination class="paginador" [tableEl]="tableEl" [searchDataSource]="elements"></mdb-table-pagination>
+                    </td>
+
+                </table>
+
+            </div>
+
+        </div>
+    </div>
+</div>
+
+<!-- MODAL CREAR TURNO-->
+
+<div class="modal fade" id="modalCrearTurno" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header mh">
+                <h5 class="modal-title w-100 text-center " id="exampleModalLabel">Crear Turno</h5>
+
+            </div>
+            <div class="modal-body">
+                <!-- Form -->
+                <form class="text-center" style="color: #757575;" [formGroup]="formCrearTurno" (ngSubmit)="crearTurno(formCrearTurno.value)">
+
+
+
+                    <div class="row m-2">
+
+                        <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <!-- SELECCIONAR RUTA -->
+                            <h5>
+                                <mdb-badge class="subTitulo">Seleccionar Ruta <i class="fas fa-map-marked-alt"></i></mdb-badge>
+                            </h5>
+                            <div class="divSelect">
+                                <select formControlName="ruta" class="form-control" name="tipo">
+    
+                                        <option value="" >Seleccionar..</option>
+                                        <option *ngFor="let ruta of rutas" value="{{ruta._id}}" >{{ruta.origen |titlecase}} - {{ ruta.destino |titlecase}}</option>                             
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <!-- SELECCIONAR UNIDAD -->
+
+                        <div class=" col col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <h5>
+                                <mdb-badge class="subTitulo">Seleccionar Unidad <i class="fas fa-bus-alt"></i></mdb-badge>
+                            </h5>
+                            <div class="divSelect">
+                                <select formControlName="bus" class="form-control" name="tipo">
+
+                                    <option value="" >Seleccionar..</option>
+                                    <option *ngFor="let u of unidades" value="{{u._id}}" >{{u.numeroDisco }}  {{ u.placa | uppercase}}</option>
+                                
+                            </select>
+                            </div>
+                        </div>
+
+
+
+                    </div>
+
+                    <!-- SELECCIONAR EMPLEADO1 -->
+                    <div class="row m-1 divSelect">
+                        <div class=" col col-lg-9 col-md-9  col-sm-9 col-xs-9 ">
+                            <h5>
+                                <mdb-badge class="subTitulo">Seleccionar Empleado<i class="fas fa-user-tie"></i></mdb-badge>
+                            </h5>
+                            <div class="divSelect">
+                                <select formControlName="empleado1" class="form-control" name="tipo">
+        
+                                            <option value="" >Seleccionar..</option>
+                                            <option *ngFor="let e of usuarios" value="{{e._id}}" >{{e.nombre |titlecase }} {{ e.apellido |titlecase}}</option>
+                                        
+                                    </select>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- SELECCIONAR TIPO DE EMPLEADO -->
+                    <div class="row m-1 divSelect">
+                        <div class=" col col-lg-9 col-md-9  col-sm-9 col-xs-9 ">
+                            <h5>
+                                <mdb-badge class="subTitulo">Viajar como: </mdb-badge>
+                            </h5>
+                            <div class="divSelect">
+                                <select formControlName="tipoEmpleado1" class="form-control" name="tipo">
+            
+                                                <option value="" >Seleccionar..</option>
+                                                <option value="chofer" >Chofer</option>
+                                                <option value="ayudante" >Ayudante  </option>          
+                                        </select>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+                    <!-- SELECCIONAR EMPLEADO2 -->
+                    <div hidden class="row m-1 divSelect">
+                        <div class=" col col-lg-9 col-md-9  col-sm-9 col-xs-9 ">
+                            <h5>
+                                <mdb-badge class="subTitulo">Seleccionar Empleado<i class="fas fa-user-tie"></i></mdb-badge>
+                            </h5>
+                            <div class="divSelect">
+                                <select formControlName="empleado2" class="form-control" name="tipo">
+        
+                                            <option value="" >Seleccionar..</option>
+                                            <option *ngFor="let e of usuarios" value="{{e._id}}" >{{e.nombre }} {{ e.apellido}}</option>
+                                        
+                                    </select>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- SELECCIONAR TIPO DE EMPLEADO2 -->
+                    <div hidden class="row m-1 divSelect">
+                        <div class=" col col-lg-9 col-md-9  col-sm-9 col-xs-9 ">
+                            <h5>
+                                <mdb-badge class="subTitulo">Viajar como: </mdb-badge>
+                            </h5>
+                            <div class="divSelect">
+                                <select formControlName="tipoEmpleado2" class="form-control" name="tipo">
+            
+                                                <option value="" >Seleccionar..</option>
+                                                <option value="chofer" >Chofer</option>
+                                                <option value="ayudante" >Ayudante  </option>
+                                                
+                                            
+                                        </select>
+                            </div>
+                        </div>
+
+                    </div>
+
+
+
+                    <!-- DATOS POR TIPO DE ROL -->
+
+
+                    <hr>
+
+                    <div class=" button group row m-3 ">
+
+                        <button type="button" class="btn col btn-md mh2 " aria-label="Close" data-dismiss="modal" (click)="resetearForm()"><i class="fas fa-window-close"></i> Cancelar</button>
+                        <button type="submit " class="btn col btn-md mhh "><i class="fas fa-save"></i> crear Turno</button>
+
+                    </div>
+
+                </form>
+                <!-- Form -->
+            </div>
+        </div>
+    </div>
+</div>
+
+
+
+<!-- MODAL AGREGAR EMPLEADO AL TURNO-->
+
+<div class="modal fade" id="modalAgregarEmpleado" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header mh">
+                <h5 class="modal-title w-100 text-center " id="exampleModalLabel">Agregar Empleado</h5>
+
+            </div>
+            <div class="modal-body">
+                <!-- Form -->
+                <form class="text-center" style="color: #757575;" [formGroup]="formEditarTurno" (ngSubmit)="agregarEmpleadoAlTurno(formEditarTurno.value,elements1[0][0])">
+
+
+
+                    <div hidden class="row m-2">
+
+                        <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <!-- SELECCIONAR RUTA -->
+                            <h5>
+                                <mdb-badge class="subTitulo">Seleccionar Ruta <i class="fas fa-map-marked-alt"></i></mdb-badge>
+                            </h5>
+                            <div class="divSelect">
+                                <select formControlName="ruta" class="form-control" name="tipo">
+    
+                                        <option value="" >Seleccionar..</option>
+                                        <option *ngFor="let ruta of rutas" value="{{ruta._id}}" >{{ruta.origen |titlecase}} - {{ ruta.destino |titlecase}}</option>                             
+                                </select>
+                            </div>
+
+                        </div>
+
+                        <!-- SELECCIONAR UNIDAD -->
+
+                        <div class=" col col-lg-6 col-md-6 col-sm-6 col-xs-12">
+                            <h5>
+                                <mdb-badge class="subTitulo">Seleccionar Unidad <i class="fas fa-bus-alt"></i></mdb-badge>
+                            </h5>
+                            <div class="divSelect">
+                                <select formControlName="bus" class="form-control" name="tipo">
+
+                                    <option value="" >Seleccionar..</option>
+                                    <option *ngFor="let u of unidades" value="{{u._id}}" >{{u.numeroDisco }}  {{ u.placa |uppercase}}</option>
+                                
+                            </select>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- DATOS DEL VIAJE - USUARIO/ROL DE VIAJE -->
+
+                    <div class="row m-3">
+
+                        <!-- EMPLEADO QUE VIAJA-->
+                        <div class=" col-lg-6 col-md-6 col-sm-6 col-xs-12 mb-3">
+
+                            <div class="form-floating ">
+
+                                <input formControlName="empleado1" type="text" name='nombre' class="form-control form-icon-trailing entrada1" id="floatingInputNombre" placeholder="Nombre" readonly>
+
+                                <label for="floatingInput" class="form-label"><i class="fas fa-signature"></i> Nombre</label>
+
+                            </div>
+
+                        </div>
+
+                        <div class=" col-lg-6 col-md-6 col-sm-6 col-xs-12  ">
+
+                            <!-- TIPO DE EMPLEADO-->
+
+
+                            <select formControlName="tipoEmpleado1" class="form-control" id="select2E" name="nuevoRol" [(ngModel)]="opcionSeleccionado" (change)="capturar(elements1)">
+                            <!-- <option value=""></option> -->
+                                <option *ngFor="let el of elements1" value="{{el[6]}}">{{el[6] |uppercase}}</option>
+                              
+                                <!-- <option *ngFor="let roles of roles;"  value="{{roles._id}}">{{roles.nombre |titlecase}}</option> -->
+                    
+                            </select>
+
+                        </div>
+
+                    </div>
+
+                    <!-- <p [hidden]="opcionSeleccionado == '0'">Haz seleccionado la opción # {{ verSeleccion }}</p> -->
+                    <!-- SELECCIONAR EMPLEADO2 -->
+                    <div class="row m-1 divSelect">
+                        <div class=" col col-lg-9 col-md-9  col-sm-9 col-xs-9 ">
+                            <h5>
+                                <mdb-badge class="subTitulo">Seleccionar Empleado<i class="fas fa-user-tie"></i></mdb-badge>
+                            </h5>
+                            <div class="divSelect">
+                                <select formControlName="empleado2" class="form-control" name="tipo">
+        
+                                    <option *ngFor="let e of usuarios" value="{{e._id}}" >{{e.nombre |titlecase }} {{ e.apellido |titlecase}}</option>
+                                        
+                                </select>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <!-- SELECCIONAR TIPO DE EMPLEADO2 -->
+                    <!-- <ng-container *ngFor="let el of elements1"> -->
+
+                    <div class="row m-1 divSelect" *ngIf="opcionSeleccionado != 'chofer'">
+                        <div class=" col col-lg-9 col-md-9  col-sm-9 col-xs-9 ">
+                            <h5>
+                                <mdb-badge class="subTitulo">Viajar como: </mdb-badge>
+                            </h5>
+                            <div class="divSelect">
+                                <select formControlName="tipoEmpleado2" class="form-control" name="tipo">            
+                                                  <!-- <option *ngIf="el[0][6] != 'ayudante'" value="chofer" >Chofer</option> -->
+                                        <option value="chofer" >chofer  </option>
+                                                                                                    
+                                    </select>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- </ng-container> -->
+                    <!-- <ng-container *ngFor="let el of elements1"> -->
+
+                    <div class="row m-1 divSelect" *ngIf="opcionSeleccionado != 'ayudante'">
+                        <div class=" col col-lg-9 col-md-9  col-sm-9 col-xs-9 ">
+                            <h5>
+                                <mdb-badge class="subTitulo">Viajar como: </mdb-badge>
+                            </h5>
+                            <div class="divSelect">
+                                <select formControlName="tipoEmpleado2" class="form-control" name="tipo">            
+                                                  <!-- <option *ngIf="el[0][6] != 'ayudante'" value="chofer" >Chofer</option> -->
+                                        <option value="ayudante" >Ayudante </option>
+                                                                                                    
+                                    </select>
+
+                            </div>
+
+                        </div>
+                    </div>
+
+                    <!-- </ng-container> -->
+
+
+
+                    <!-- DATOS POR TIPO DE ROL -->
+
+
+                    <hr>
+
+                    <div class=" button group row m-3 ">
+
+                        <button type="button" class="btn col btn-md mh2 " aria-label="Close" data-dismiss="modal" (click)="resetearForm()"><i class="fas fa-window-close"></i> Cancelar</button>
+                        <button type="submit " class="btn col btn-md mhh "><i class="fas fa-user-plus"></i> Agregar Empleado</button>
+
+                    </div>
+
+                </form>
+                <!-- Form -->
+            </div>
+        </div>
+    </div>
+</div>

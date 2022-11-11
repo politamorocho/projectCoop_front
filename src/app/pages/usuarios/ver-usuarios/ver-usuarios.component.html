@@ -1,0 +1,448 @@
+<app-sidebar></app-sidebar>
+
+
+<div class="main-panel">
+    <div class="content" id="main">
+
+        <p class="p1">Administar Usuarios</p>
+
+        <!-- <div class="subcabecera "> -->
+
+        <button type="button" class="btn ml-4 mb-3 db botoncito" data-toggle="modal" data-target="#modalCrearUsuario" (click)="enviarRol()"><i class="fas fa-plus"></i>
+                Crear Usuario
+        </button>
+
+        <div class="divSelect">
+            <div class="form__group field divSelect ">
+                <input type="input" [(ngModel)]="searchText" class="form__field" placeholder="Name" name="name" id='name' />
+                <label for="name" class="form__label" style="font-size: 16px;">  <i class="fas fa-search" ></i> Búsqueda</label>
+            </div>
+        </div>
+
+        <div class="table-responsive">
+
+            <table mdbTable #tableEl="mdbTable" class="tt table">
+                <thead class="ths">
+                    <tr>
+                        <th scope="col"><i class="fas fa-signature"></i> Nombre</th>
+                        <th scope="col"><i class="fas fa-at"></i> Correo</th>
+                        <th scope="col"><i class="fas fa-fingerprint"></i> Cédula</th>
+                        <th scope="col"><i class="fas fa-users"></i> Rol</th>
+                        <th scope="col"><i class="far fa-calendar"></i> Tipo de empleado</th>
+                        <th scope="col"><i class="fab fa-font-awesome-flag"></i> Estado</th>
+                        <th scope="col"><i class="fas fa-tools"></i> Acciones</th>
+                    </tr>
+                </thead>
+                <tbody class="tbs">
+                    <tr mdbTableCol *ngFor="let el of elements; let i =index">
+                        <th *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex" scope="row">{{el.nombre | titlecase}} {{el.apellido | titlecase}}</th>
+                        <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{el.correo}}</td>
+                        <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{el.cedula}}</td>
+
+                        <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{el.rol.nombre | titlecase}}</td>
+                        <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{el.tipo | titlecase}}</td>
+
+                        <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">{{el.estado | translate}}</td>
+
+                        <td *ngIf="i+1 >= mdbTablePagination.firstItemIndex && i < mdbTablePagination.lastItemIndex">
+                            <div class="button-group">
+
+                                <button *ngIf="el.estado == false" hidden type="button" class="btn  btn-sm bbb" data-toggle="modal" data-target="#modalEditarUsuario" (click)="obtenerPorID(el._id)"><i class="fas fa-pencil-alt"></i> Editar</button>
+                                <button *ngIf="el.estado == true" type="button" class="btn  btn-sm bbb" data-toggle="modal" data-target="#modalEditarUsuario" (click)="obtenerPorID(el._id)" (click)="enviarRol()"><i class="fas fa-pencil-alt"></i> Editar</button>
+                                <button *ngIf="el.estado == false" style="width: 12.5em;" type="button" class="btn  btn-sm botoncito" data-toggle="modal" data-target="#modalHabilitarUsuario" (click)="enviarUsuario(el)"><i class="fas fa-check"></i> Habilitar</button>
+                                <button *ngIf="el.estado == true" type="button" class="btn  btn-sm b3" data-toggle="modal" data-target="#modalEliminarUsuario" (click)="enviarUsuario(el)"><i class="fas fa-ban "></i> Inhalibitar</button>
+
+
+                            </div>
+                        </td>
+                    </tr>
+                </tbody>
+                <td class="" colspan="11">
+                    <mdb-table-pagination class="" [tableEl]="tableEl" [searchDataSource]="elements"></mdb-table-pagination>
+                </td>
+            </table>
+        </div>
+    </div>
+
+</div>
+
+<!-- MODAL CREAR USUARIO-->
+
+<div class="modal fade" id="modalCrearUsuario" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header mh">
+                <h5 class="modal-title w-100 text-center " id="exampleModalLabel">Crear Usuario</h5>
+
+            </div>
+            <div class="modal-body">
+                <!-- Form -->
+                <form class="text-center" style="color: #757575;" [formGroup]="formCrearUsuario" (ngSubmit)="crearUsuario(formCrearUsuario.value)">
+
+                    <!-- SELECCIONAR TIPO DE ROL -->
+
+                    <div>
+                        <h5>
+                            <mdb-badge class="subTitulo">Seleccionar Rol <i class="fas fa-users"></i></mdb-badge>
+                        </h5>
+                        <div class="divSelect">
+
+                            <select formControlName="rol" [(ngModel)]="opcionSeleccionado" (change)="capturar2(elements2)" class="form-control ssmm" name="nuevoRol">
+
+                        <option  value="">Seleccionar..</option>
+                        <option  *ngFor="let el of elements2"  value="{{el._id}}">{{el.nombre |titlecase}}</option>
+                        
+                    </select>
+
+                        </div>
+
+                    </div>
+
+                    <!-- ----------------------------------------------------------------- -->
+
+                    <!-- DATOS POR TIPO DE ROL -->
+
+                    <div class="row m-3">
+
+
+                        <!-- INGRESAR NOMBRE DE USUARIO -->
+                        <div class=" col-lg-6 col-md-6 col-sm-6 col-xs-12 mb-3">
+                            <span *ngIf="f.nombre.invalid && (f.nombre.dirty || f.nombre.touched)" class="text-danger animated fadeIn"> Debe ingresar un nombre</span>
+
+                            <div class="form-floating ">
+
+                                <input [class.is-invalid]="formCrearUsuario.get('nombre')?.touched && formCrearUsuario.get('nombre')?.invalid" formControlName="nombre" type="text" name='nombre' class="form-control form-icon-trailing entrada1" id="floatingInputNombre" placeholder="Nombre">
+
+                                <label for="floatingInput" class="form-label"><i class="fas fa-signature"></i> Nombre</label>
+
+                            </div>
+
+                        </div>
+
+                        <div class=" col-lg-6 col-md-6 col-sm-6 col-xs-12  ">
+                            <!-- INGRESAR APELLIDO DE USUARIO -->
+
+                            <span *ngIf="f.apellido.invalid && (f.apellido.dirty || f.apellido.touched)" class="text-danger animated fadeIn"> Debe ingresar un apellido</span>
+
+                            <div class="form-floating  ">
+
+                                <input [class.is-invalid]="formCrearUsuario.get('apellido')?.touched && formCrearUsuario.get('apellido')?.invalid" formControlName="apellido" type="text" name='apellido' class="form-control form-icon-trailing entrada1" id="floatingInputApellido2" placeholder="Apellido">
+
+                                <label for="floatingInput" class="form-label"><i class="fas fa-signature"></i> Apellido</label>
+
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row m-3 divSelect">
+                        <!-- ENTRADA PARA CEDULA USUARIO -->
+
+
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-5">
+                            <span *ngIf="validador ==false" class="text-danger animated fadeIn">Cédula Invalida</span>
+                            <div class="form-floating mb-3">
+
+                                <!-- <span *ngIf="f.apellido.invalid && (f.apellido.dirty || f.apellido.touched)" class="text-danger animated fadeIn"> Debe ingresar un apellido</span> -->
+
+                                <input [class.is-invalid]="formCrearUsuario.get('cedula')?.touched && formCrearUsuario.get('cedula')?.invalid" formControlName="cedula" type="text" name='cedula' [(ngModel)]="cedula" (change)="validarCedula(cedula)" maxlength="10" class="form-control form-icon-trailing entrada1"
+                                    id="floatingInputCedula2" placeholder="Cédula">
+
+                                <label for="floatingInput" class="form-label"><i class="fas fa-fingerprint"></i> Cédula de identidad</label>
+
+                            </div>
+
+                        </div>
+
+                        <!-- DATOS QUE DEBEN MOSTRARSE SEGÚN TIPO DE USUARIO -->
+
+                        <!-- INGRESAR CORREO USUARIO-->
+                        <!-- <p [hidden]="opcionSeleccionado == '0'">Has seleccionado la opción # {{ verSeleccion }}</p> -->
+
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-5 mb-3">
+
+                            <span *ngIf="f.correo.invalid && (f.correo.dirty || f.correo.touched)" class="text-danger animated fadeIn"> Debe ingresar un correo válido</span>
+
+                            <div *ngIf="verSeleccion != 'empleado'" class="form-floating ">
+                                <!-- <div *ngIf="opcionSeleccionado !=  'empleado'" class="form-floating "> -->
+
+
+
+                                <input [class.is-invalid]="formCrearUsuario.get('correo')?.touched && formCrearUsuario.get('correo')?.invalid" required formControlName="correo" type="email" name='email' class="form-control form-icon-trailing entrada1" id="floatingInputEditarCorreo"
+                                    placeholder="Usuario">
+
+                                <label for="floatingInput" class="form-label"><i class="fas fa-at"></i> Correo electrónico </label>
+
+                            </div>
+
+
+                        </div>
+
+                        <!-- INGRESAR CONTRASEÑA -->
+
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-5 mb-1">
+
+                            <span *ngIf="f.claveUsuario.invalid && (f.claveUsuario.dirty || f.claveUsuario.touched)" class="text-danger animated fadeIn">Contraseña mínima de 6 caractéres</span>
+
+                            <div *ngIf="verSeleccion != 'empleado'" class="form-floating ">
+
+                                <input [class.is-invalid]="formCrearUsuario.get('claveUsuario')?.touched && formCrearUsuario.get('claveUsuario')?.invalid" required formControlName="claveUsuario" autocomplete="off" type="password" name='password' class="form-control form-icon-trailing entrada1"
+                                    id="floatingInputIngresoPassword" placeholder="password">
+
+                                <label for="floatingInput" class="form-label"><i class="fas fa-lock"></i> Contraseña</label>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <!-- 61a441de9c280307a91a43e4 -->
+
+                    <div *ngIf="verSeleccion == 'empleado'">
+                        <h5>
+                            <mdb-badge class="subTitulo">Seleccionar tipo de empleado <i class="far fa-calendar"></i></mdb-badge>
+                        </h5>
+                        <div class="divSelect">
+                            <select formControlName="tipo" class="form-control ssmm" name="tipo">
+                                <option  value="">Seleccionar..</option>
+                                    <option value="chofer" >Chofer</option>
+                                    <option value="ayudante" > Ayudante</option>
+                                    <!-- <option value="ayudante_chofer" >Chofer-Ayudante</option> -->
+                            </select>
+                        </div>
+                    </div>
+                    <div *ngIf="verSeleccion == 'administrador'">
+                        <h5>
+                            <mdb-badge class="subTitulo">Seleccionar tipo de empleado <i class="far fa-calendar"></i></mdb-badge>
+                        </h5>
+                        <div class="divSelect">
+                            <select formControlName="tipo" class="form-control ssmm" name="tipo">
+                                <option  value="">Seleccionar..</option>
+                                    <option value="chofer" >Chofer</option>
+                                    <option value="ayudante" > Ayudante</option>
+                                    <option value="ayudante_chofer" >Chofer-Ayudante</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <hr>
+
+                    <div class=" button group row m-3 ">
+
+                        <button type="button" class="btn col btn-md mh2 " aria-label="Close" data-dismiss="modal" (click)="resetear()"><i class="fas fa-window-close"></i> Cancelar</button>
+                        <button type="submit " class="btn col btn-md mhh "><i class="fas fa-save"></i> crear Usuario</button>
+
+                    </div>
+
+                </form>
+                <!-- Form -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL EDITAR USUARIO-->
+
+<div class="modal fade" id="modalEditarUsuario" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header mh">
+                <h5 class="modal-title w-100 text-center " id="exampleModalLabel">Editar Usuario</h5>
+
+            </div>
+            <div class="modal-body">
+                <!-- Form -->
+                <form class="text-center" style="color: #757575;" [formGroup]="formEditarUsuario" (ngSubmit)="editarUsuario(formEditarUsuario.value, elements1[0][0])">
+
+
+                    <!-- ID DE USUARIO -->
+                    <div class=" col-lg-6 col-md-6 col-sm-6 col-xs-12 mb-3" hidden>
+
+                        <div class="form-floating ">
+
+                            <input formControlName="_id" type="text" name='id' class="form-control form-icon-trailing entrada1" id="floatingInputID" placeholder="Nombre">
+
+                            <label for="floatingInput" class="form-label"><i class="fas fa-signature"></i> Nombre</label>
+
+                        </div>
+
+                    </div>
+
+                    <!-- SELECCIONAR TIPO DE ROL -->
+
+                    <div>
+                        <h5>
+                            <mdb-badge class="subTitulo">Seleccionar Rol <i class="fas fa-users"></i></mdb-badge>
+                        </h5>
+                        <div class="divSelect">
+
+                            <select formControlName="rol" [(ngModel)]="opcionSeleccionado" (change)="capturar2(elements2)" class="form-control ssmm" name="nuevoRol">
+                            
+                            <option *ngFor="let el of elements1" value="{{el[3]._id }}">{{el[3].nombre |titlecase}}</option>
+                          
+                            <option  *ngFor="let el of elements2"  value="{{el._id}}">{{el.nombre |titlecase}}</option>
+
+
+                        </select>
+                        </div>
+                    </div>
+
+                    <!-- ----------------------------------------------------------------- -->
+
+                    <!-- DATOS POR TIPO DE ROL -->
+
+                    <div class="row m-3">
+
+                        <!-- INGRESAR NOMBRE DE USUARIO -->
+                        <div class=" col-lg-6 col-md-6 col-sm-6 col-xs-12 mb-3">
+
+                            <div class="form-floating ">
+
+                                <input style="text-transform: capitalize;" formControlName="nombre" type="text" name='nombre' class="form-control form-icon-trailing entrada1" id="floatingInputNombre2" placeholder="Nombre">
+
+                                <label for="floatingInput" class="form-label"><i class="fas fa-signature"></i> Nombre</label>
+
+                            </div>
+
+                        </div>
+
+                        <div class=" col-lg-6 col-md-6 col-sm-6 col-xs-12  ">
+                            <!-- INGRESAR APELLIDO DE USUARIO -->
+                            <div class="form-floating  ">
+
+                                <input style="text-transform: capitalize;" formControlName="apellido" type="text" name='apellido' class="form-control form-icon-trailing entrada1" id="floatingInputApellido" placeholder="Apellido">
+
+                                <label for="floatingInput" class="form-label"><i class="fas fa-signature"></i> Apellido</label>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                    <div class="row m-3 divSelect">
+                        <!-- ENTRADA PARA CEDULA USUARIO -->
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-5">
+                            <div class="form-floating mb-3">
+
+                                <input formControlName="cedula" type="text" name='dni' class="form-control form-icon-trailing entrada1" id="floatingInputCedula" placeholder="Cédula">
+
+                                <label for="floatingInput" class="form-label"><i class="fas fa-fingerprint"></i> Cédula de identidad</label>
+
+                            </div>
+
+                        </div>
+
+                        <!-- DATOS QUE DEBEN MOSTRARSE SEGÚN TIPO DE USUARIO -->
+
+                        <!-- INGRESAR CORREO USUARIO-->
+                        <p [hidden]="opcionSeleccionado == '0'">Haz seleccionado la opción # {{ verSeleccion }}</p>
+                        <div class="col-lg-12 col-md-12 col-sm-12 col-xs-5 mb-3">
+
+
+                            <!-- <div *ngIf="opcionSeleccionado !=  '618E8229b8858e7bd4e06dbc'" class="form-floating "> -->
+                            <div *ngIf="verSeleccion!=  'empleado'" class="form-floating ">
+
+                                <input formControlName="correo" type="email" name='email' class="form-control form-icon-trailing entrada1" id="floatingInputIngresoCorreo" placeholder="Usuario" value="{{''}}">
+
+                                <label for="floatingInput" class="form-label"><i class="fas fa-at"></i> Correo electrónico </label>
+
+                            </div>
+
+
+                        </div>
+
+                    </div>
+
+                    <div *ngIf="verSeleccion == 'empleado'">
+                        <h5>
+                            <mdb-badge class="subTitulo">Seleccionar tipo de empleado <i class="far fa-calendar"></i></mdb-badge>
+                        </h5>
+                        <div class="divSelect">
+                            <select formControlName="tipo" class="form-control ssmm" name="tipo">
+                                <option  value="">Seleccionar..</option>
+                                    <option value="chofer" >Chofer</option>
+                                    <option value="ayudante" > Ayudante</option>
+                                    <!-- <option value="ayudante_chofer" >Chofer-Ayudante</option> -->
+                            </select>
+                        </div>
+                    </div>
+                    <div *ngIf="verSeleccion == 'administrador'">
+                        <h5>
+                            <mdb-badge class="subTitulo">Seleccionar tipo de empleado <i class="far fa-calendar"></i></mdb-badge>
+                        </h5>
+                        <div class="divSelect">
+                            <select formControlName="tipo" class="form-control ssmm" name="tipo">
+                                <option  value="">Seleccionar..</option>
+                                    <option value="chofer" >Chofer</option>
+                                    <option value="ayudante" > Ayudante</option>
+                                    <option value="ayudante_chofer" >Chofer-Ayudante</option>
+                            </select>
+                        </div>
+                    </div>
+
+
+                    <hr>
+
+                    <div class=" button group row m-3 ">
+
+                        <button type="button" class="btn col btn-md mh2 " aria-label="Close" data-dismiss="modal" (click)="resetearE(formEditarUsuario.reset)"><i class="fas fa-window-close"></i> Cancelar</button>
+                        <button type="submit " class="btn col btn-md mhh "><i class="fas fa-save"></i> Guardar Edición</button>
+
+                    </div>
+
+                </form>
+                <!-- Form -->
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL ELIMINAR USUARIO -->
+
+<div class="modal fade" id="modalEliminarUsuario" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header mh">
+                <h5 class="modal-title w-100 text-center " id="exampleModalLabel">Deshabilitar Usuario</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          
+          </button>
+            </div>
+            <div class="modal-body  mr-3 ml-3">
+                <p class="titulo-eliminar" *ngFor="let elements1 of elements1"> ¿Está seguro de deshabilitar el usuario {{elements1[7] |uppercase}} {{elements1[6] | uppercase}} ?</p>
+            </div>
+
+            <div class=" button group row m-4 ">
+
+                <button type="button" class="btn col btn-md mh2 " aria-label="Close" data-dismiss="modal"><i class="fas fa-window-close"></i> Cancelar</button>
+                <button *ngFor="let elements1 of elements1" type="button" class="btn col btn-md mhh " aria-label="Close" data-dismiss="modal" (click)="eliminarUsuario(elements1[0])"><i class="fas fa-ban"></i> Sí, deshabilitar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- MODAL HABILITAR USUARIO -->
+
+<div class="modal fade" id="modalHabilitarUsuario" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header mh">
+                <h5 class="modal-title w-100 text-center " id="exampleModalLabel">Habilitar Usuario</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          
+          </button>
+            </div>
+            <div class="modal-body  mr-3 ml-3">
+                <p class="titulo-eliminar" *ngFor="let elements1 of elements1"> ¿Está seguro de habilitar el usuario {{elements1[7] |uppercase}} {{elements1[6] | uppercase}} ?</p>
+            </div>
+
+            <div class=" button group row m-4 ">
+
+                <button type="button" class="btn col btn-md mh2 " aria-label="Close" data-dismiss="modal"><i class="fas fa-window-close"></i> Cancelar</button>
+                <button *ngFor="let elements1 of elements1" type="button" class="btn col btn-md mhh " aria-label="Close" data-dismiss="modal" (click)="habilitarUsuario(elements1[0])"><i class="fas fa-check"></i> Sí, habilitar</button>
+            </div>
+        </div>
+    </div>
+</div>

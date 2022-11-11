@@ -1,0 +1,151 @@
+<app-sidebar>
+
+</app-sidebar>
+<div class="main-panel">
+
+    <div class="content" id="main">
+
+
+        <p class="p1">Generar Reportes</p>
+
+        <br>
+        <br>
+        <br>
+        <br>
+        <br>
+
+
+        <!-- <div class="table-responsive"> -->
+        <div class="table-responsive">
+
+            <table datatable [dtOptions]="dtOptions" [dtTrigger]="dtTrigger" class="row-border      " id="example" style="width: 100%;">
+
+                <thead class="ths" style="height: 4em;">
+                    <tr>
+                        <th><i class="fas fa-calendar"></i> Fecha</th>
+
+                        <th><i class="fas fa-map-marked-alt"></i> Ruta</th>
+
+                        <th><i class="fas fa-bus-alt"></i> Unidad</th>
+
+                        <th><i class="fas fa-id-card"></i> Placa </th>
+
+                        <th><i class="fas fa-user-tie"></i> Empleado 1</th>
+
+                        <th><i class="fas fa-user-friends"></i> Tipo </th>
+
+                        <th><i class="fas fa-user-tie"></i> Empleado 2</th>
+
+                        <th><i class="fas fa-user-friends"></i> Tipo </th>
+
+                        <th><i class="fas fa-ban"></i> Suspensión 1 </th>
+                        <th><i class="fas fa-ban"></i> Suspensión 2 </th>
+
+
+                    </tr>
+
+                </thead>
+                <tbody id="tbs">
+
+                    <ng-container *ngFor="let el of elements">
+
+
+
+                        <tr>
+
+                            <!-- <td *ngIf="el.suspensionActiva.lenght != 1">{{el.fechaHoraSalida |date: 'EEEE, dd/MM/yyyy HH:mm':'UTC -5'| titlecase}}</td> -->
+                            <td>{{el.fechaHoraSalida |date: 'EEEE, dd/MM/yyyy HH:mm':'UTC -5'| titlecase}}</td>
+
+                            <td>{{el.ruta.origen |titlecase}} - {{el.ruta.destino |titlecase}}
+                                <small style="font-weight: bold; font-size: small;">Tiempo:</small> {{el.ruta.duracionAprox}} </td>
+
+                            <td>{{el.bus.numeroDisco}} </td>
+                            <td> {{el.bus.placa | uppercase}} </td>
+
+                            <!-- <td>{{el.bus.numeroDisco}} {{el.bus.placa | uppercase}}</td> -->
+
+                            <td *ngIf="el.empleado2 == null && el.suspensionActiva.length == 1" style="color:rgb(56, 25, 228)"> {{el.empleado1.nombre |titlecase}} </td>
+
+                            <ng-container *ngFor="let susp of el.suspensionActiva">
+
+                                <td *ngIf="susp.usuario._id == el.empleado1._id && el.empleado2 == null && el.suspensionActiva.lenngth  == 1" style="color:rgb(240, 75, 46);">{{el.empleado1.nombre |titlecase}} {{el.empleado1.apellido |titlecase}}</td>
+
+
+                                <td *ngIf="susp.usuario._id == el.empleado1._id " style="color:rgb(240, 75, 46);">{{el.empleado1.nombre |titlecase}} {{el.empleado1.apellido |titlecase}}</td>
+
+
+                                <td *ngIf="susp.usuario._id != el.empleado1._id && el.suspensionActiva.length ==1">{{el.empleado1.nombre |titlecase}} {{el.empleado1.apellido |titlecase}} </td>
+                                <!-- <td *ngIf="susp.usuario._id != el.empleado1._id && el.suspensionActiva.length ==1 && el.empleado2 ==null">{{el.empleado1.nombre |titlecase}} {{el.empleado1.apellido |titlecase}} </td> -->
+
+
+
+                            </ng-container>
+                            <td *ngIf="el.suspensionActiva.length == 0 ">{{el.empleado1.nombre |titlecase}} {{el.empleado1.apellido |titlecase}}</td>
+
+
+
+                            <td>{{el.tipoEmpleado1 |titlecase }}</td>
+                            <td *ngIf="el.empleado2==null && el.suspensionActiva.length ==1">{{'hola'}}</td>
+                            <ng-container *ngFor="let susp of el.suspensionActiva">
+
+
+                                <!-- <td *ngIf="el.empleado2 == null " style="color:rgb(228, 25, 167);"></td> -->
+                                <td *ngIf="susp.usuario._id == el.empleado2._id && el.empleado2 != null " style="color:rgb(228, 25, 167);">{{el.empleado2.nombre |titlecase}} {{el.empleado2.apellido |titlecase}}</td>
+
+                                <td *ngIf="susp.usuario._id != el.empleado2._id && el.suspensionActiva.length ==1 && el.empleado2 != null">{{el.empleado2.nombre |titlecase}} {{el.empleado2.apellido |titlecase}}</td>
+
+                            </ng-container>
+                            <td *ngIf="el.suspensionActiva.length == 0 && el.empleado2 != null">{{el.empleado2.nombre |titlecase}} {{el.empleado2.apellido |titlecase}}</td>
+                            <!-- <td *ngIf="el.suspensionActiva.length == 0 ">{{''}}</td> -->
+
+                            <td>{{el.tipoEmpleado2 |titlecase }}</td>
+
+
+                            <ng-container>
+
+
+                                <td *ngIf="el.suspensionActiva.length != 0 && el.empleado2 == null" style="color:rgb(240, 75, 46);">{{el.suspensionActiva[0].inicio |date: ' dd/MM/yyyy ':'UTC -5'| titlecase }} - {{el.suspensionActiva[0].final |date: ' dd/MM/yyyy ':'UTC -5'| titlecase }} </td>
+
+
+                                <ng-container *ngFor="let susp of el.suspensionActiva">
+
+
+
+                                    <td *ngIf="el.suspensionActiva.length != 0 && susp.usuario._id == el.empleado1._id " style="color:rgb(240, 75, 46);">{{el.suspensionActiva[0].inicio |date: ' dd/MM/yyyy ':'UTC -5'| titlecase }} - {{el.suspensionActiva[0].final |date: ' dd/MM/yyyy ':'UTC -5'| titlecase }} </td>
+                                    <td *ngIf="el.suspensionActiva.length == 1 && susp.usuario._id == el.empleado2._id  "> {{" " }} </td>
+
+                                </ng-container>
+
+
+                                <td *ngIf="el.suspensionActiva.length == 0 ">{{''}}</td>
+
+
+                            </ng-container>
+
+
+                            <td *ngIf="el.empleado2 == null"></td>
+
+                            <td *ngIf="el.suspensionActiva.length ==1 && el.empleado2._id == el.suspensionActiva[0].usuario._id " style="color:rgb(228, 25, 167);">{{el.suspensionActiva[0].inicio |date: ' dd/MM/yyyy ':'UTC -5'| titlecase }} - {{el.suspensionActiva[0].final |date: ' dd/MM/yyyy ':'UTC -5'| titlecase }}</td>
+
+                            <td *ngIf="el.suspensionActiva.length == 2 && el.empleado2 !=null" style="color:rgb(228, 25, 167);">{{el.suspensionActiva[1].inicio |date: ' dd/MM/yyyy ':'UTC -5'| titlecase }} - {{el.suspensionActiva[1].final |date: ' dd/MM/yyyy ':'UTC -5'| titlecase }}
+
+                            </td>
+                            <td *ngIf="el.suspensionActiva.length == 0 || ( el.suspensionActiva.length  == 1  && el.empleado1._id == el.suspensionActiva[0].usuario._id )">{{''}}</td>
+
+
+
+                        </tr>
+
+                    </ng-container>
+
+
+                </tbody>
+                <tfoot>
+
+                </tfoot>
+            </table>
+        </div>
+
+
+    </div>
+</div>

@@ -1,0 +1,44 @@
+<body class="bbody">
+    <div class="container mt-5 animated fadeInLeft">
+        <div class="row cb2">
+            <div class="col-sm-9 col-md-7 col-lg-5 mx-auto cb3">
+                <div class="card border-0 shadow rounded-3 my-5 cb4">
+                    <div class="card-body p-4 p-sm-5 cb ">
+                        <img src="assets/img/logoflorvalle.png" class="image">
+
+
+                        <form #f="ngForm" (ngSubmit)="ingresar(f)" class="login100-form validate-form flex-sb flex-w animated ">
+
+                            <span *ngIf="f.submitted && f.controls['dni'].errors" class="text-danger animated fadeIn">El campo usuario es obligaorio</span>
+                            <div class="form-floating mb-3">
+                                <input type="text" name='dni' required [(ngModel)]="logueo.cedula" class="form-control en" id="floatingInput" placeholder="Usuario">
+                                <label for="floatingInput">Usuario</label>
+                            </div>
+
+                            <span *ngIf="f.submitted && f.controls['password'].errors" class="text-danger">La contraseña debe tener más de 6 letras</span>
+                            <div class="form-floating mb-3">
+                                <input name="password" [(ngModel)]="logueo.clave" required minlength="4" autocomplete="off" type="password" class="form-control en" id="floatingPassword" placeholder="Password">
+                                <label for="floatingPassword">Contraseña</label>
+                            </div>
+
+
+
+
+                            <div class="text-center mt-4">
+                                <button type="submit" class="btn waves-light lg">Ingresar <i class="fas fa-sign-in-alt"></i></button>
+                            </div>
+
+                            <div class="textoA">
+                                <label>¿ Olvidó su contraseña ? <a [routerLink]="['/login/recuperar']" routerLinkActive="router-link-active" > Solicitar recuperación de contraseña.</a> </label>
+                            </div>
+
+
+
+                        </form>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
