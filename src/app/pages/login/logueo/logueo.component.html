@@ -4,9 +4,11 @@
             <div class="col-sm-9 col-md-7 col-lg-5 mx-auto cb3">
                 <div class="card border-0 shadow rounded-3 my-5 cb4">
                     <div class="card-body p-4 p-sm-5 cb ">
-                        <img src="assets/img/logoflorvalle.png" class="image">
+                        <!-- <img src="assets/img/logoflorvalle.png" class="image"> -->
 
-
+                        <div class="">
+                          <h1>Cooperativa de Buses</h1>
+                        </div>
                         <form #f="ngForm" (ngSubmit)="ingresar(f)" class="login100-form validate-form flex-sb flex-w animated ">
 
                             <span *ngIf="f.submitted && f.controls['dni'].errors" class="text-danger animated fadeIn">El campo usuario es obligaorio</span>

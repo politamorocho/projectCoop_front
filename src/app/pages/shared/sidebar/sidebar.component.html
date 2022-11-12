@@ -18,7 +18,7 @@
     <div class="sidebar-wrapper">
         <div class="logo-rc">
             <img src="assets/img/flor.png" />
-            <span>Flor del Valle</span>
+            <span>Cooperativa</span>
         </div>
         <div class="nav">
             <ul>
@@ -99,15 +99,15 @@
         <ng-container *ngFor="let el of elements">
 
             <button *ngIf="el.rol.nombre  == 'secretaria'" type="button" class="btn  dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-          
+
             <img src="assets/img/rolS.png" alt="" class="photo" >
-            
+
             </button>
 
             <!-- <button *ngIf="el.rol.nombre  == 'administrador' && el.rol.nombre !='secretaria' " type="button" class="btn  dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" style="background-color:white;">
-          
+
                 <img src="assets/img/rolA.png" alt="" class="photo" >
-                
+
             </button> -->
             <!-- <small *ngIf="el.rol.nombre  == 'secretaria'"> {{el.nombre|titlecase}} - {{el.rol.nombre |titlecase}}</small> -->
         </ng-container>

@@ -112,13 +112,13 @@
                         <div class="col col-lg-6 col-md-6 col-sm-6 col-xs-12">
                             <!-- SELECCIONAR RUTA -->
                             <h5>
-                                <mdb-badge class="subTitulo">Seleccionar Ruta <i class="fas fa-map-marked-alt"></i></mdb-badge>
+                                <mdb-badge class="subTitulo" >Seleccionar Ruta <i class="fas fa-map-marked-alt"></i></mdb-badge>
                             </h5>
                             <div class="divSelect">
                                 <select formControlName="ruta" class="form-control" name="tipo">
-    
+
                                         <option value="" >Seleccionar..</option>
-                                        <option *ngFor="let ruta of rutas" value="{{ruta._id}}" >{{ruta.origen |titlecase}} - {{ ruta.destino |titlecase}}</option>                             
+                                        <option *ngFor="let ruta of rutas" value="{{ruta._id}}" >{{ruta.origen |titlecase}} - {{ ruta.destino |titlecase}}</option>
                                 </select>
                             </div>
 
@@ -135,7 +135,7 @@
 
                                     <option value="" >Seleccionar..</option>
                                     <option *ngFor="let u of unidades" value="{{u._id}}" >{{u.numeroDisco }}  {{ u.placa | uppercase}}</option>
-                                
+
                             </select>
                             </div>
                         </div>
@@ -152,10 +152,10 @@
                             </h5>
                             <div class="divSelect">
                                 <select formControlName="empleado1" class="form-control" name="tipo">
-        
+
                                             <option value="" >Seleccionar..</option>
                                             <option *ngFor="let e of usuarios" value="{{e._id}}" >{{e.nombre |titlecase }} {{ e.apellido |titlecase}}</option>
-                                        
+
                                     </select>
                             </div>
                         </div>
@@ -170,10 +170,10 @@
                             </h5>
                             <div class="divSelect">
                                 <select formControlName="tipoEmpleado1" class="form-control" name="tipo">
-            
+
                                                 <option value="" >Seleccionar..</option>
                                                 <option value="chofer" >Chofer</option>
-                                                <option value="ayudante" >Ayudante  </option>          
+                                                <option value="ayudante" >Ayudante  </option>
                                         </select>
                             </div>
                         </div>
@@ -189,10 +189,10 @@
                             </h5>
                             <div class="divSelect">
                                 <select formControlName="empleado2" class="form-control" name="tipo">
-        
+
                                             <option value="" >Seleccionar..</option>
                                             <option *ngFor="let e of usuarios" value="{{e._id}}" >{{e.nombre }} {{ e.apellido}}</option>
-                                        
+
                                     </select>
                             </div>
                         </div>
@@ -207,12 +207,12 @@
                             </h5>
                             <div class="divSelect">
                                 <select formControlName="tipoEmpleado2" class="form-control" name="tipo">
-            
+
                                                 <option value="" >Seleccionar..</option>
                                                 <option value="chofer" >Chofer</option>
                                                 <option value="ayudante" >Ayudante  </option>
-                                                
-                                            
+
+
                                         </select>
                             </div>
                         </div>
@@ -266,9 +266,9 @@
                             </h5>
                             <div class="divSelect">
                                 <select formControlName="ruta" class="form-control" name="tipo">
-    
+
                                         <option value="" >Seleccionar..</option>
-                                        <option *ngFor="let ruta of rutas" value="{{ruta._id}}" >{{ruta.origen |titlecase}} - {{ ruta.destino |titlecase}}</option>                             
+                                        <option *ngFor="let ruta of rutas" value="{{ruta._id}}" >{{ruta.origen |titlecase}} - {{ ruta.destino |titlecase}}</option>
                                 </select>
                             </div>
 
@@ -285,7 +285,7 @@
 
                                     <option value="" >Seleccionar..</option>
                                     <option *ngFor="let u of unidades" value="{{u._id}}" >{{u.numeroDisco }}  {{ u.placa |uppercase}}</option>
-                                
+
                             </select>
                             </div>
                         </div>
@@ -317,9 +317,9 @@
                             <select formControlName="tipoEmpleado1" class="form-control" id="select2E" name="nuevoRol" [(ngModel)]="opcionSeleccionado" (change)="capturar(elements1)">
                             <!-- <option value=""></option> -->
                                 <option *ngFor="let el of elements1" value="{{el[6]}}">{{el[6] |uppercase}}</option>
-                              
+
                                 <!-- <option *ngFor="let roles of roles;"  value="{{roles._id}}">{{roles.nombre |titlecase}}</option> -->
-                    
+
                             </select>
 
                         </div>
@@ -335,9 +335,9 @@
                             </h5>
                             <div class="divSelect">
                                 <select formControlName="empleado2" class="form-control" name="tipo">
-        
+
                                     <option *ngFor="let e of usuarios" value="{{e._id}}" >{{e.nombre |titlecase }} {{ e.apellido |titlecase}}</option>
-                                        
+
                                 </select>
                             </div>
                         </div>
@@ -353,10 +353,10 @@
                                 <mdb-badge class="subTitulo">Viajar como: </mdb-badge>
                             </h5>
                             <div class="divSelect">
-                                <select formControlName="tipoEmpleado2" class="form-control" name="tipo">            
+                                <select formControlName="tipoEmpleado2" class="form-control" name="tipo">
                                                   <!-- <option *ngIf="el[0][6] != 'ayudante'" value="chofer" >Chofer</option> -->
                                         <option value="chofer" >chofer  </option>
-                                                                                                    
+
                                     </select>
 
                             </div>
@@ -373,10 +373,10 @@
                                 <mdb-badge class="subTitulo">Viajar como: </mdb-badge>
                             </h5>
                             <div class="divSelect">
-                                <select formControlName="tipoEmpleado2" class="form-control" name="tipo">            
+                                <select formControlName="tipoEmpleado2" class="form-control" name="tipo">
                                                   <!-- <option *ngIf="el[0][6] != 'ayudante'" value="chofer" >Chofer</option> -->
                                         <option value="ayudante" >Ayudante </option>
-                                                                                                    
+
                                     </select>
 
                             </div>
